@@ -8,6 +8,7 @@ public class HoldableObject : MonoBehaviour
     public GameObject popUpPreFab;
     private GameObject popUpTxt;
     private PlayerController nearestPlayer;
+    public float distance;
 
     private Rigidbody2D rb;
 
@@ -15,11 +16,12 @@ public class HoldableObject : MonoBehaviour
     public float popUpRadius;
     private bool inRange = false;
     private bool pickedUp = false;
+    public bool key;
 
 
     void Start()
     {
-        popUpTxt = Instantiate(popUpPreFab, new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), Quaternion.identity, FindObjectOfType<Canvas>().transform);
+        popUpTxt = Instantiate(popUpPreFab, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), Quaternion.identity, FindObjectOfType<Canvas>().transform);
         disablePopUp();
         rb = GetComponent<Rigidbody2D>();
     }
@@ -42,7 +44,9 @@ public class HoldableObject : MonoBehaviour
             }
         }
 
-        
+
+        popUpTxt.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+
     }
 
     private void Update()
@@ -65,7 +69,7 @@ public class HoldableObject : MonoBehaviour
 
     public void pickUp(Transform player)
     {
-        transform.position = new Vector2(player.position.x, player.position.y + 0.5f);
+        transform.position = new Vector2(player.position.x, player.position.y + distance);
         transform.parent = player;
         rb.isKinematic = true;
         setPickedUp(true);
@@ -74,12 +78,11 @@ public class HoldableObject : MonoBehaviour
 
     public void drop(Transform player)
     {
-        transform.position = new Vector2(transform.position.x, transform.position.y - 0.5f);
+        transform.position = new Vector2(transform.position.x, transform.position.y - distance);
         transform.parent = null;
         rb.isKinematic = false;
         setPickedUp(false);
         player.gameObject.GetComponent<PlayerController>().SetCarrying(false);
-        popUpTxt.transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
     }
 
     public void enablePopUp(string txt)

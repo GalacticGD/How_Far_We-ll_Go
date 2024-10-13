@@ -15,10 +15,18 @@ public class CrumblePlatform : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            anim.SetTrigger("Crumble");
-            //StartCoroutine("");
+            StartCoroutine("PlatformCrumble");
         }
     }
 
-    //public IEnumerator Platform
+    public IEnumerator PlatformCrumble()
+    {
+        anim.SetBool("Crumble", true);
+        BoxCollider2D collider = GetComponent<BoxCollider2D>();
+        yield return new WaitForSeconds(1f);
+        collider.enabled = false;
+        yield return new WaitForSeconds(2f);
+        collider.enabled = true;
+        anim.SetBool("Crumble", false);
+    }
 }
